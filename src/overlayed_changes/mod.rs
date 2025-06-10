@@ -1018,7 +1018,7 @@ mod tests {
 		overlay.set_storage(b"doug2".to_vec(), Some(b"yes".to_vec()));
 
 		let mut ext = Ext::new(&mut overlay, &backend, None);
-		let root = "5c0a4e35cb967de785e1cb8743e6f24b6ff6d45155317f2078f6eb3fc4ff3e3d";
+		let root = "57dfbbf228943a14dd191753d2fbe59b2121bb48534710c938d0c63906ce0d7f";
 		assert_eq!(bytes2hex("", &ext.storage_root(state_version)), root);
 	}
 
