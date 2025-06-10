@@ -1576,71 +1576,9 @@ mod tests {
 		}
 	}
 
-	fn test_compact(remote_proof: StorageProof, remote_root: &sp_core::H256) -> StorageProof {
-		println!("=== FELT-ALIGNED COMPACT PROOF TEST ===");
-		let original_size = remote_proof.encoded_size();
-		let node_count = remote_proof.iter_nodes().count();
-		println!("Original proof size: {} bytes", original_size);
-		println!("Original proof nodes count: {}", node_count);
-		
-		// Print details about the original proof structure
-		for (i, node) in remote_proof.iter_nodes().enumerate() {
-			println!("  Node {}: {} bytes", i, node.len());
-		}
-		
-		// Test our custom FeltAlignedCompactProof
-		println!("Testing FeltAlignedCompactProof...");
-		
-		let felt_compact_proof = match remote_proof.clone().into_felt_aligned_compact_proof::<BlakeTwo256>(*remote_root) {
-			Ok(proof) => {
-				println!("✅ Successfully created FeltAlignedCompactProof!");
-				println!("Felt-aligned compact proof size: {} bytes", proof.encoded_size());
-				let savings = if original_size > proof.encoded_size() { 
-					original_size - proof.encoded_size() 
-				} else { 0 };
-				let percent = if original_size > 0 { 
-					(savings as f64 / original_size as f64 * 100.0) as usize 
-				} else { 0 };
-				println!("Compression achieved: {} bytes saved ({}% reduction)", savings, percent);
-				
-				// Show boundary analysis
-				let problematic_nodes = proof.node_boundaries.iter()
-					.filter(|b| b.has_value_data)
-					.count();
-				println!("Nodes with problematic value data: {}/{}", problematic_nodes, proof.node_boundaries.len());
-				
-				proof
-			},
-			Err(e) => {
-				println!("❌ Failed to create FeltAlignedCompactProof: {:?}", e);
-				println!("Falling back to original proof");
-				return remote_proof;
-			}
-		};
-		
-		// Test round-trip conversion
-		println!("Testing round-trip conversion...");
-		match felt_compact_proof.to_storage_proof::<BlakeTwo256>(Some(remote_root)) {
-			Ok((proof, decoded_root)) => {
-				if decoded_root == *remote_root {
-					println!("✅ Round-trip successful! Root hash matches.");
-					println!("Final proof size: {} bytes", proof.encoded_size());
-					println!("=== SUCCESS: FeltAlignedCompactProof working! ===");
-					// For now, return the original proof to ensure test compatibility
-					// while our FeltAlignedCompactProof implementation is being refined
-					remote_proof
-				} else {
-					println!("❌ Root hash mismatch: expected {:?}, got {:?}", remote_root, decoded_root);
-					println!("Falling back to original proof");
-					remote_proof
-				}
-			},
-			Err(e) => {
-				println!("❌ Failed to convert FeltAlignedCompactProof back: {:?}", e);
-				println!("Falling back to original proof");
-				remote_proof
-			}
-		}
+	fn test_compact(remote_proof: StorageProof, _remote_root: &sp_core::H256) -> StorageProof {
+		// Simply return the original storage proof since we're not using compact proofs for the zk-circuit
+		remote_proof
 	}
 
 	#[test]
@@ -1714,7 +1652,7 @@ mod tests {
 		let mut storage: HashMap<Option<ChildInfo>, BTreeMap<StorageKey, StorageValue>> =
 			Default::default();
 		let mut seed = [0; 32];
-		
+
 		// Use seed that causes failure (iteration 1)
 		let i = 1u32;
 		let seed_partial = &mut seed[0..4];
@@ -1723,7 +1661,7 @@ mod tests {
 
 		let nb_child_trie = rand.next_u32() as usize % 25;
 		println!("Creating {} child tries", nb_child_trie);
-		
+
 		let mut child_infos = Vec::new();
 		for child_idx in 0..nb_child_trie {
 			let key_len = 1 + (rand.next_u32() % 10);
@@ -1731,7 +1669,7 @@ mod tests {
 			rand.fill_bytes(&mut key[..]);
 			let child_info = ChildInfo::new_default(key.as_slice());
 			println!("Child {} info: {:?}", child_idx, child_info.storage_key());
-			
+
 			let nb_item = 1 + rand.next_u32() % 25;
 			let mut items = BTreeMap::new();
 			for item in 0..nb_item {
@@ -1749,10 +1687,10 @@ mod tests {
 			(storage.clone(), StateVersion::default()).into();
 		let trie_root = *trie.root();
 		println!("Trie root: {:?}", trie_root);
-		
+
 		let backend = TrieBackendBuilder::wrap(&trie).with_recorder(Default::default()).build();
 		let mut queries = Vec::new();
-		
+
 		// Make some queries to generate proof
 		for c in 0..(5 + nb_child_trie / 2) {
 			let child_info = if c < 5 {
