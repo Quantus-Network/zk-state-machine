@@ -2367,6 +2367,7 @@ dependencies = [
 [[package]]
 name = "sp-trie"
 version = "38.0.0"
+source = "git+https://github.com/Quantus-Network/zk-trie#fb1216a5cc15c6767eb5eec2981868d749923a80"
 dependencies = [
  "ahash",
  "hash-db",
