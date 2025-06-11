@@ -2216,7 +2216,7 @@ dependencies = [
  "sp-externalities",
  "sp-keystore",
  "sp-runtime-interface",
- "sp-state-machine 0.44.0",
+ "sp-state-machine",
  "sp-tracing",
  "sp-trie",
  "tracing",
@@ -2311,7 +2311,7 @@ dependencies = [
 
 [[package]]
 name = "sp-state-machine"
-version = "0.35.0"
+version = "0.44.0"
 dependencies = [
  "arbitrary",
  "array-bytes",
@@ -2327,27 +2327,6 @@ dependencies = [
  "sp-externalities",
  "sp-panic-handler",
  "sp-runtime",
- "sp-trie",
- "thiserror",
- "tracing",
- "trie-db",
-]
-
-[[package]]
-name = "sp-state-machine"
-version = "0.44.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bce4ee5ee6c614994077e6e317270eab6fde2bc346b028290286cbf9d0011b7e"
-dependencies = [
- "hash-db",
- "log",
- "parity-scale-codec",
- "parking_lot",
- "rand",
- "smallvec",
- "sp-core",
- "sp-externalities",
- "sp-panic-handler",
  "sp-trie",
  "thiserror",
  "tracing",
@@ -2388,6 +2367,7 @@ dependencies = [
 [[package]]
 name = "sp-trie"
 version = "38.0.0"
+source = "git+https://github.com/Quantus-Network/zk-trie#fb1216a5cc15c6767eb5eec2981868d749923a80"
 dependencies = [
  "ahash",
  "hash-db",

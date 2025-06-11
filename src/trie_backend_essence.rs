@@ -357,6 +357,24 @@ impl<S: TrieBackendStorage<H>, H: Hasher, C: TrieCacheProvider<H>, R: TrieRecord
 	}
 }
 
+impl<H> TrieBackendStorage<H> for sp_trie::PrefixedMemoryDB<H>
+where
+	H: Hasher,
+{
+	fn get(&self, key: &H::Out, prefix: Prefix) -> Result<Option<DBValue>> {
+		Ok(hash_db::HashDB::get(self, key, prefix))
+	}
+}
+
+impl<H> TrieBackendStorage<H> for sp_trie::MemoryDB<H>
+where
+	H: Hasher,
+{
+	fn get(&self, key: &H::Out, prefix: Prefix) -> Result<Option<DBValue>> {
+		Ok(hash_db::HashDB::get(self, key, prefix))
+	}
+}
+
 impl<
 		S: TrieBackendStorage<H>,
 		H: Hasher,

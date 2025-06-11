@@ -1368,12 +1368,22 @@ pub mod tests {
 			let proof = backend.extract_proof().unwrap();
 
 			let mut nodes = Vec::new();
+			
 			for node in proof.into_iter_nodes() {
 				let hash = BlakeTwo256::hash(&node);
 				// Only insert the node/value that contains the important data.
-				if hash != value_hash {
-					let node = sp_trie::NodeCodec::<BlakeTwo256>::decode(&node)
-						.unwrap()
+				if hash == value_hash {
+					// This is the actual value data
+					nodes.push((hash, trie_db::node::NodeOwned::Value(node.into(), hash)));
+				} else if node.len() == 32 {
+					// In zk-trie, child nodes are never inlined (minimum size is 32 bytes = hash size)
+					// So 32-byte entries are hash references, not decodable nodes - skip them
+					continue;
+				} else {
+					// This should be a decodable trie node - any decode failure is a real error
+					let decoded_node = sp_trie::NodeCodec::<BlakeTwo256>::decode(&node)
+						.unwrap();
+					let node = decoded_node
 						.to_owned_node::<sp_trie::LayoutV1<BlakeTwo256>>()
 						.unwrap();
 
@@ -1382,11 +1392,8 @@ pub mod tests {
 							nodes.push((hash, node));
 						}
 					}
-				} else if hash == value_hash {
-					nodes.push((hash, trie_db::node::NodeOwned::Value(node.into(), hash)));
 				}
 			}
-
 			nodes
 		};
 

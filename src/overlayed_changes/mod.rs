@@ -1007,7 +1007,7 @@ mod tests {
 
 		{
 			let mut ext = Ext::new(&mut overlay, &backend, None);
-			let root = "39245109cef3758c2eed2ccba8d9b370a917850af3824bc8348d505df2c298fa";
+			let root = "9cec419f1b2e6cc16c1e04967a50986ff41912f440884208739f732624c37897";
 
 			assert_eq!(bytes2hex("", &ext.storage_root(state_version)), root);
 			// Calling a second time should use it from the cache
@@ -1018,7 +1018,7 @@ mod tests {
 		overlay.set_storage(b"doug2".to_vec(), Some(b"yes".to_vec()));
 
 		let mut ext = Ext::new(&mut overlay, &backend, None);
-		let root = "5c0a4e35cb967de785e1cb8743e6f24b6ff6d45155317f2078f6eb3fc4ff3e3d";
+		let root = "57dfbbf228943a14dd191753d2fbe59b2121bb48534710c938d0c63906ce0d7f";
 		assert_eq!(bytes2hex("", &ext.storage_root(state_version)), root);
 	}
 
@@ -1039,8 +1039,8 @@ mod tests {
 
 		{
 			let mut ext = Ext::new(&mut overlay, &backend, None);
-			let child_root = "c02965e1df4dc5baf6977390ce67dab1d7a9b27a87c1afe27b50d29cc990e0f5";
-			let root = "eafb765909c3ed5afd92a0c564acf4620d0234b31702e8e8e9b48da72a748838";
+			let child_root = "c352b681994556fcd685f3a897f2f0823b7e11f02d145dc0b19ccaa4dde6c900";
+			let root = "4ea9acedf06e096f4aa4dc4bb26844276987a4f6f8b6dca08293a37b8042acac";
 
 			assert_eq!(
 				bytes2hex("", &ext.child_storage_root(child_info, state_version)),
