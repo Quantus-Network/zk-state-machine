@@ -1040,7 +1040,7 @@ mod tests {
 		{
 			let mut ext = Ext::new(&mut overlay, &backend, None);
 			let child_root = "c352b681994556fcd685f3a897f2f0823b7e11f02d145dc0b19ccaa4dde6c900";
-			let root = "4ea9acedf06e096f4aa4dc4bb26844276987a4f6f8b6dca08293a37b8042acac";
+			let root = "b19f247ac1d21096a5a223deb65407d7bbe9728b103f10961babc258b69df3a9";
 
 			assert_eq!(
 				bytes2hex("", &ext.child_storage_root(child_info, state_version)),
