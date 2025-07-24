@@ -30,7 +30,7 @@ trie-db = { version = "0.29.1", default-features = false }
 sp-trie = { version = "39.1.0" }
 
 [patch.crates-io]
-sp-trie = { git = "https://github.com/Quantus-Network/zk-trie" }
+sp-trie = { git = "https://github.com/Quantus-Network/zk-trie", branch = "polkadot-stable2503-7" }
 sp-state-machine = { path = "." }
 
 [dev-dependencies]
